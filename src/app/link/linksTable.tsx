@@ -1,12 +1,27 @@
 import { DateTime } from "luxon"
 import LinkRow from "./linkRow"
+import { Link } from "@prisma/client"
 
 type Props = {
   title: string,
   description: string,
+  links: Link[]
 }
 
-export default function LinksTable({title, description}: Props) {
+export default function LinksTable({title, description, links}: Props) {
+  const renderLinks = () => {
+    return links.map((link) => (
+      <LinkRow
+        key={link.id}
+        name={link.name}
+        link={link.slug}
+        destination={link.destination}
+        created={link.createdAt}
+        status="success"
+      />
+    ))
+  }
+
   return (
     <div className="mx-auto">
       <div className="flex flex-col">
@@ -90,14 +105,7 @@ export default function LinksTable({title, description}: Props) {
                 </thead>
 
                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                  <LinkRow
-                    name="test"
-                    link="https://splinkler.com/test"
-                    destination="https://google.com"
-                    created={new Date()}
-                    expires={DateTime.now().plus({days: 1}).toJSDate()}
-                    status="success"
-                  />
+                {renderLinks()}
                 </tbody>
               </table>
 
